@@ -7,7 +7,6 @@ import 'slick-carousel/slick/slick-theme.css'
 import { Button } from '../components/ui/Button'
 import { Card } from '../components/ui/Card'
 import { useTheme } from '../contexts/ThemeContext'
-import { FaHome, FaBook } from 'react-icons/fa'
 
 const slides = [
   {
