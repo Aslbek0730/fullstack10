@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useTheme } from '../../contexts/ThemeContext'
 import { motion } from 'framer-motion'
@@ -13,8 +13,10 @@ import {
   FaUser, 
   FaCog, 
   FaBars,
-  FaTimes
+  FaTimes,
+  FaSignOutAlt
 } from 'react-icons/fa'
+import { useState } from 'react'
 
 const SidebarContainer = styled(motion.div)`
   position: fixed;
@@ -123,9 +125,105 @@ const ToggleButton = styled.button`
   }
 `
 
+const LogoutButton = styled.button`
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  color: ${({ theme }) => theme.colors.text};
+  border-radius: ${({ theme }) => theme.borderRadius};
+  margin-top: auto;
+  margin-bottom: 16px;
+  transition: all ${({ theme }) => theme.transition};
+  background: none;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: ${({ theme }) => 
+      theme.name === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
+    };
+    color: ${({ theme }) => theme.colors.error};
+  }
+  
+  svg {
+    margin-right: 12px;
+    font-size: 1.2rem;
+  }
+`
+
+const DialogOverlay = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+`
+
+const DialogContent = styled(motion.div)`
+  background: ${({ theme }) => theme.colors.background};
+  padding: 24px;
+  border-radius: ${({ theme }) => theme.borderRadius};
+  box-shadow: ${({ theme }) => theme.boxShadow};
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+`
+
+const DialogTitle = styled.h3`
+  margin: 0 0 16px 0;
+  color: ${({ theme }) => theme.colors.text};
+`
+
+const DialogButtons = styled.div`
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 24px;
+`
+
+const DialogButton = styled.button`
+  padding: 8px 24px;
+  border-radius: ${({ theme }) => theme.borderRadius};
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all ${({ theme }) => theme.transition};
+  
+  &:first-child {
+    background-color: ${({ theme }) => theme.colors.error};
+    color: white;
+    
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.error}dd;
+    }
+  }
+  
+  &:last-child {
+    background-color: ${({ theme }) => theme.colors.border};
+    color: ${({ theme }) => theme.colors.text};
+    
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.border}dd;
+    }
+  }
+`
+
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const { theme } = useTheme()
   const location = useLocation()
+  const navigate = useNavigate()
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false)
+  
+  const handleLogout = () => {
+    // TODO: Implement logout logic
+    navigate('/')
+  }
   
   const sidebarItems = [
     { path: '/app', text: 'Asosiy', icon: <FaHome /> },
@@ -158,6 +256,13 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               {item.text}
             </NavLink>
           ))}
+          <LogoutButton 
+            theme={theme}
+            onClick={() => setShowLogoutDialog(true)}
+          >
+            <FaSignOutAlt />
+            Chiqish
+          </LogoutButton>
         </Navigation>
       </SidebarContainer>
       
@@ -168,6 +273,35 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       >
         {isOpen ? <FaTimes /> : <FaBars />}
       </ToggleButton>
+
+      {showLogoutDialog && (
+        <DialogOverlay
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={() => setShowLogoutDialog(false)}
+        >
+          <DialogContent
+            theme={theme}
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            onClick={e => e.stopPropagation()}
+          >
+            <DialogTitle theme={theme}>
+              Chiqish uchun ishonchingiz komilmi?
+            </DialogTitle>
+            <DialogButtons>
+              <DialogButton theme={theme} onClick={handleLogout}>
+                Ha
+              </DialogButton>
+              <DialogButton theme={theme} onClick={() => setShowLogoutDialog(false)}>
+                Yo`q
+              </DialogButton>
+            </DialogButtons>
+          </DialogContent>
+        </DialogOverlay>
+      )}
     </>
   )
 }

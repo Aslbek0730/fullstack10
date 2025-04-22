@@ -37,6 +37,7 @@ const RightSection = styled.div`
   align-items: center;
   padding: 2rem;
   background: white;
+  color: #1a1a1a;
 `
 
 const LoginForm = styled.form`
@@ -45,6 +46,7 @@ const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  color: #1a1a1a;
 `
 
 const InputGroup = styled.div`
@@ -109,10 +111,10 @@ const LoginPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>
+          <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: '#1a1a1a' }}>
             Xush kelibsiz!
           </h1>
-          <p style={{ fontSize: '1.2rem' }}>
+          <p style={{ fontSize: '1.2rem', color: '#1a1a1a' }}>
             O&apos;rganishni davom ettiring!
           </p>
         </motion.div>
@@ -124,11 +126,7 @@ const LoginPage = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Link to="/" style={{ marginBottom: '2rem', display: 'block' }}>
-            <Button variant="outline">← Asosiy sahifaga qaytish</Button>
-          </Link>
-
-          <h2 style={{ fontSize: '2rem', marginBottom: '2rem' }}>Kirish</h2>
+          <h2 style={{ fontSize: '2rem', marginBottom: '2rem', color: '#1a1a1a' }}>Kirish</h2>
 
           <LoginForm onSubmit={handleSubmit}>
             <InputGroup>

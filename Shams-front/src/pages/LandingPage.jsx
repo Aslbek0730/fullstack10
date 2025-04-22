@@ -13,19 +13,22 @@ const slides = [
     id: 1,
     title: "Kelajak ixtirochilari shu yerda boshlanadi!",
     subtitle: "AI, Robototexnika, Dasturlash — 4 yoshdan boshlab",
-    gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+    gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    backgroundImage: "https://www.technewsworld.com/wp-content/uploads/sites/3/2025/02/humanoid-robot-programming-code.jpg"
   },
   {
     id: 2,
     title: "Sun`iy intellekt yordamida o`rganing",
     subtitle: "Zamonaviy texnologiyalar bilan tanishing",
-    gradient: "linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)"
+    gradient: "linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)",
+    backgroundImage: "https://di.ku.dk/Nyheder/2023/fremtidens-programmeringssprog-udvikles-i-danmark/programming_on_screen-1100x600.jpg"
   },
   {
     id: 3,
     title: "Innovatsion testlar va tajribalar",
     subtitle: "Amaliy bilimlar orqali o`rganing",
-    gradient: "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)"
+    gradient: "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)",
+    backgroundImage: "https://assets.skyfilabs.com/playto/img/best-programming-languages-for-kids.webp"
   }
 ]
 
@@ -126,7 +129,9 @@ const Slide = styled.div`
   align-items: center;
   text-align: center;
   padding: 2rem;
-  background: ${({ gradient }) => gradient};
+  background: ${({ gradient, backgroundImage }) => 
+    `${gradient}, url(${backgroundImage}) center/cover no-repeat`
+  };
   position: relative;
   overflow: hidden;
   
@@ -137,7 +142,7 @@ const Slide = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(5px);
   }
 `
@@ -182,6 +187,35 @@ const FeaturesGrid = styled.div`
   margin: 0 auto;
 `
 
+const AuraButton = styled(Button)`
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+  }
+  
+  &:hover::before {
+    width: 300%;
+    height: 300%;
+  }
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+`
+
 const LandingPage = () => {
   const { theme } = useTheme()
   const settings = {
@@ -200,13 +234,13 @@ const LandingPage = () => {
         <Logo theme={theme}>Shams Academy</Logo>
         <NavLinks>
           <Link to="/login">
-            <Button variant="outline">Login</Button>
+            <AuraButton variant="gradient">Login</AuraButton>
           </Link>
           <Link to="/register">
-            <Button variant="secondary">Register</Button>
+            <AuraButton variant="secondary">Register</AuraButton>
           </Link>
           <Link to="/register">
-            <Button variant="gradient">Get Started</Button>
+            <AuraButton variant="gradient">Get Started</AuraButton>
           </Link>
         </NavLinks>
         <HamburgerMenu>
@@ -216,7 +250,11 @@ const LandingPage = () => {
 
       <StyledSlider {...settings}>
         {slides.map((slide) => (
-          <Slide key={slide.id} gradient={slide.gradient}>
+          <Slide 
+            key={slide.id} 
+            gradient={slide.gradient}
+            backgroundImage={slide.backgroundImage}
+          >
             <SlideContent>
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
