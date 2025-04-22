@@ -128,14 +128,14 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const location = useLocation()
   
   const sidebarItems = [
-    { path: '/', text: 'Asosiy', icon: <FaHome /> },
-    { path: '/courses', text: 'Kurslar', icon: <FaBook /> },
-    { path: '/assistant', text: 'Aqilli intellekt', icon: <FaBrain /> },
-    { path: '/tests', text: 'Testlar', icon: <FaClipboardCheck /> },
-    { path: '/library', text: 'Kutubxona', icon: <FaBookOpen /> },
-    { path: '/payments', text: 'To`lovlar', icon: <FaCreditCard /> },
-    { path: '/profile', text: 'Profil', icon: <FaUser /> },
-    { path: '/settings', text: 'Sozlamalar', icon: <FaCog /> },
+    { path: '/app', text: 'Asosiy', icon: <FaHome /> },
+    { path: '/app/courses', text: 'Kurslar', icon: <FaBook /> },
+    { path: '/app/assistant', text: 'Aqilli intellekt', icon: <FaBrain /> },
+    { path: '/app/tests', text: 'Testlar', icon: <FaClipboardCheck /> },
+    { path: '/app/library', text: 'Kutubxona', icon: <FaBookOpen /> },
+    { path: '/app/payments', text: 'To`lovlar', icon: <FaCreditCard /> },
+    { path: '/app/profile', text: 'Profil', icon: <FaUser /> },
+    { path: '/app/settings', text: 'Sozlamalar', icon: <FaCog /> },
   ]
   
   return (
