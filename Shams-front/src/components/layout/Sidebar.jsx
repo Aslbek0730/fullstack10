@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { useTheme } from '../../contexts/ThemeContext'
 import { motion } from 'framer-motion'
+import PropTypes from 'prop-types'
 import { 
   FaHome, 
   FaBook, 
@@ -18,7 +19,7 @@ import {
 const SidebarContainer = styled(motion.div)`
   position: fixed;
   top: 0;
-  left: ${({ isOpen }) => (isOpen ? '0' : '-240px')};
+  left: ${({ $isOpen }) => ($isOpen ? '0' : '-240px')};
   width: 240px;
   height: 100vh;
   background: ${({ theme }) => 
@@ -32,7 +33,7 @@ const SidebarContainer = styled(motion.div)`
   overflow-y: auto;
   
   @media (max-width: 768px) {
-    left: ${({ isOpen }) => (isOpen ? '0' : '-240px')};
+    left: ${({ $isOpen }) => ($isOpen ? '0' : '-240px')};
   }
 `
 
@@ -65,13 +66,13 @@ const NavLink = styled(Link)`
   display: flex;
   align-items: center;
   padding: 12px 16px;
-  color: ${({ theme, isActive }) => 
-    isActive ? theme.colors.primary[400] : theme.colors.text
+  color: ${({ theme, $isActive }) => 
+    $isActive ? theme.colors.primary[400] : theme.colors.text
   };
   border-radius: ${({ theme }) => theme.borderRadius};
   margin-bottom: 8px;
   transition: all ${({ theme }) => theme.transition};
-  font-weight: ${({ isActive }) => (isActive ? '500' : '400')};
+  font-weight: ${({ $isActive }) => ($isActive ? '500' : '400')};
   
   &:hover {
     background-color: ${({ theme }) => 
@@ -80,8 +81,8 @@ const NavLink = styled(Link)`
     color: ${({ theme }) => theme.colors.primary[400]};
   }
   
-  ${({ isActive, theme }) => 
-    isActive && `
+  ${({ $isActive, theme }) => 
+    $isActive && `
       background-color: ${
         theme.name === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
       };
@@ -98,7 +99,7 @@ const NavLink = styled(Link)`
 const ToggleButton = styled.button`
   position: fixed;
   top: 16px;
-  left: ${({ isOpen }) => (isOpen ? '248px' : '16px')};
+  left: ${({ $isOpen }) => ($isOpen ? '248px' : '16px')};
   z-index: 1001;
   background-color: ${({ theme }) => theme.colors.primary[400]};
   color: white;
@@ -127,19 +128,19 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const location = useLocation()
   
   const sidebarItems = [
-    { path: '/', text: 'Home', icon: <FaHome /> },
-    { path: '/courses', text: 'Courses', icon: <FaBook /> },
-    { path: '/assistant', text: 'AI Assistant', icon: <FaBrain /> },
-    { path: '/tests', text: 'Tests', icon: <FaClipboardCheck /> },
-    { path: '/library', text: 'Library', icon: <FaBookOpen /> },
-    { path: '/payments', text: 'Payments', icon: <FaCreditCard /> },
-    { path: '/profile', text: 'Profile', icon: <FaUser /> },
-    { path: '/settings', text: 'Settings', icon: <FaCog /> },
+    { path: '/', text: 'Asosiy', icon: <FaHome /> },
+    { path: '/courses', text: 'Kurslar', icon: <FaBook /> },
+    { path: '/assistant', text: 'Aqilli intellekt', icon: <FaBrain /> },
+    { path: '/tests', text: 'Testlar', icon: <FaClipboardCheck /> },
+    { path: '/library', text: 'Kutubxona', icon: <FaBookOpen /> },
+    { path: '/payments', text: 'To`lovlar', icon: <FaCreditCard /> },
+    { path: '/profile', text: 'Profil', icon: <FaUser /> },
+    { path: '/settings', text: 'Sozlamalar', icon: <FaCog /> },
   ]
   
   return (
     <>
-      <SidebarContainer isOpen={isOpen} theme={theme}>
+      <SidebarContainer $isOpen={isOpen} theme={theme}>
         <Logo theme={theme}>
           <img src="/logo.svg" alt="Shams Academy Logo" />
           <h2>Shams Academy</h2>
@@ -149,7 +150,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             <NavLink 
               key={item.path} 
               to={item.path} 
-              isActive={location.pathname === item.path} 
+              $isActive={location.pathname === item.path} 
               theme={theme}
               onClick={() => window.innerWidth <= 768 && toggleSidebar()}
             >
@@ -161,7 +162,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       </SidebarContainer>
       
       <ToggleButton 
-        isOpen={isOpen} 
+        $isOpen={isOpen} 
         onClick={toggleSidebar} 
         theme={theme} 
       >
@@ -169,6 +170,11 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       </ToggleButton>
     </>
   )
+}
+
+Sidebar.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  toggleSidebar: PropTypes.func.isRequired
 }
 
 export default Sidebar

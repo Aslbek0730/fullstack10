@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { useTheme } from '../contexts/ThemeContext'
-import { motion } from 'framer-motion'
 import Card from '../components/ui/Card'
 import Button from '../components/ui/Button'
 import { FaDownload, FaShoppingCart, FaBookOpen, FaFont, FaMoon, FaSun, FaPlus, FaMinus } from 'react-icons/fa'
@@ -202,7 +201,7 @@ const bookData = {
   id: 3,
   title: 'AI for Beginners',
   author: 'Sarah Williams',
-  description: 'Discover the fascinating world of artificial intelligence with simple explanations and examples. This book breaks down complex AI concepts into easy-to-understand language for children and adults alike.',
+  description: 'Bu kitob AI haqida bo`lib, o`quvchilar va yetakchilar uchun oson tushunishga yordam beradi.',
   cover: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485',
   category: 'paid',
   price: '$14.99',
@@ -213,48 +212,9 @@ const bookData = {
   language: 'English',
   isbn: '978-1-23456-789-0',
   content: `
-    # Introduction to Artificial Intelligence
-    
-    ## What is Artificial Intelligence?
-    
-    Artificial Intelligence, or AI, is like teaching computers to think and learn like humans do. Imagine if your computer could look at a picture and recognize your face, or if it could understand when you speak to it. That's AI in action!
-    
-    AI helps computers:
-    - Recognize patterns
-    - Solve problems
-    - Make decisions
-    - Learn from experience
-    
-    ## Why is AI Important?
-    
-    AI is changing the way we live and work. It helps doctors diagnose illnesses, it powers the voice assistants in our phones, and it even helps scientists discover new medicines.
-    
-    In the future, AI will help us solve big problems like climate change and make our lives easier in many ways.
-    
-    ## Types of AI
-    
-    There are different types of AI:
-    
-    1. **Narrow AI**: This AI is good at one specific task, like playing chess or recommending movies.
-    
-    2. **General AI**: This is AI that can think and learn like humans across many different tasks. We don't have true General AI yet!
-    
-    3. **Superintelligent AI**: This would be AI that is smarter than humans in almost every way. This only exists in science fiction for now.
-    
-    ## How Does AI Learn?
-    
-    AI learns through something called "machine learning." Instead of programming every single instruction, we give AI lots of examples and it figures out the patterns on its own.
-    
-    For example, if we want to teach AI to recognize cats:
-    
-    1. We show it thousands of cat pictures
-    2. It learns what features make a cat (pointy ears, whiskers, etc.)
-    3. Then it can recognize new cats it has never seen before!
-    
-    This is similar to how you learn. You don't need to see every cat in the world to know what a cat looks like!
+   Bu kitob AI haqida bo'lib, o'quvchilar va yetakchilar uchun oson tushunishga yordam beradi.
   `
 }
-
 const BookDetail = () => {
   const { id } = useParams()
   const { theme } = useTheme()
@@ -300,13 +260,13 @@ const BookDetail = () => {
         
         <BookInfo>
           <BookTitle theme={theme}>
-            <span>Book:</span> {bookData.title}
+            <span>Kitob:</span> {bookData.title}
           </BookTitle>
           <BookAuthor theme={theme}>by {bookData.author}</BookAuthor>
           
           <BookPrice theme={theme}>
             {bookData.category === 'free' ? (
-              <span className="free">Free</span>
+              <span className="free">Bepul</span>
             ) : bookData.discounted ? (
               <>
                 <span className="original">{bookData.price}</span>
@@ -321,15 +281,15 @@ const BookDetail = () => {
           
           <BookMeta>
             <MetaItem theme={theme}>
-              <h4>Pages</h4>
+              <h4>Sahifalar</h4>
               <p>{bookData.pages}</p>
             </MetaItem>
             <MetaItem theme={theme}>
-              <h4>Published</h4>
+              <h4>Nashr qilingan</h4>
               <p>{bookData.published}</p>
             </MetaItem>
             <MetaItem theme={theme}>
-              <h4>Language</h4>
+              <h4>Til</h4>
               <p>{bookData.language}</p>
             </MetaItem>
             <MetaItem theme={theme}>
@@ -346,7 +306,7 @@ const BookDetail = () => {
                 icon={<FaDownload />}
                 glowEffect
               >
-                Download eBook
+                E-kitobni yuklash
               </Button>
             ) : (
               <Button 
@@ -355,7 +315,7 @@ const BookDetail = () => {
                 icon={<FaShoppingCart />}
                 glowEffect
               >
-                Buy Now
+                Sotib olish
               </Button>
             )}
             
@@ -381,7 +341,7 @@ const BookDetail = () => {
                 size="small" 
                 icon={<FaFont />}
                 onClick={toggleFontFamily}
-                title="Change Font"
+                title="Fontni o'zgartirish"
               />
               <Button 
                 variant="outline" 
@@ -389,7 +349,7 @@ const BookDetail = () => {
                 icon={<FaMinus />}
                 onClick={decreaseFontSize}
                 disabled={fontSize <= 12}
-                title="Decrease Font Size"
+                title="Kichikroq font"
               />
               <Button 
                 variant="outline" 
@@ -397,7 +357,7 @@ const BookDetail = () => {
                 icon={<FaPlus />}
                 onClick={increaseFontSize}
                 disabled={fontSize >= 24}
-                title="Increase Font Size"
+                title="Kattaroq font"
               />
               <Button 
                 variant="outline" 

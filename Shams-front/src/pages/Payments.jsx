@@ -90,14 +90,14 @@ const FormGroup = styled.div`
     
     &:focus {
       outline: none;
-      border-color: ${({ theme, provider }) => 
+      border-color: ${({ provider }) => 
         provider === 'payme' 
           ? '#33AAFF'
           : provider === 'click' 
           ? '#FF3333'
           : '#33FF66'
       };
-      box-shadow: 0 0 0 2px ${({ theme, provider }) => 
+      box-shadow: 0 0 0 2px ${({ provider }) => 
         provider === 'payme' 
           ? '#33AAFF33'
           : provider === 'click' 
@@ -184,8 +184,8 @@ const PaymentMethods = [
     color: '#FF3333'
   },
   {
-    id: 'grape',
-    name: 'Grape',
+    id: 'Uzum',
+    name: 'Uzum',
     icon: <FaUniversity />,
     color: '#33FF66'
   }
@@ -283,7 +283,7 @@ const Payments = () => {
           </h2>
           
           <FormGroup theme={theme} provider={selectedMethod}>
-            <label htmlFor="card-number">Card Number</label>
+            <label htmlFor="card-number">Kartaning raqami</label>
             <input 
               type="text" 
               id="card-number"
@@ -295,11 +295,11 @@ const Payments = () => {
           </FormGroup>
           
           <FormGroup theme={theme} provider={selectedMethod}>
-            <label htmlFor="amount">Amount (USD)</label>
+            <label htmlFor="amount">Miqdor (UZS)</label>
             <input 
               type="number" 
               id="amount"
-              placeholder="Enter amount"
+              placeholder="Miqdorni kiriting"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               min="1"
@@ -335,15 +335,15 @@ const Payments = () => {
               exit={{ scale: 0.8, opacity: 0 }}
             >
               {isSuccess ? <FaCheck /> : <FaTimes />}
-              <h2>{isSuccess ? 'Payment Successful!' : 'Payment Failed'}</h2>
+              <h2>{isSuccess ? 'To`lov muvaffaqiyatli amalga oshirildi!' : 'To`lov amalga oshirilmadi'}</h2>
               <p>
                 {isSuccess 
-                  ? `Your payment of $${amount} has been processed successfully.` 
-                  : 'There was an issue processing your payment. Please try again.'
+                  ? `Siz ${amount} so'm miqdoridagi pulni ${PaymentMethods.find(m => m.id === selectedMethod).name} orqali to'ladingiz.` 
+                  : 'Hisobingizga pul yuklanmadi. Iltimos, qayta urining.'
                 }
               </p>
               <Button onClick={handleCloseResult}>
-                {isSuccess ? 'Continue' : 'Try Again'}
+                {isSuccess ? 'Davom etish' : 'Qayta urish'}
               </Button>
             </SuccessCard>
           </SuccessOverlay>

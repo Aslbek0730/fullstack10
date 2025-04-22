@@ -163,7 +163,7 @@ const courses = [
   {
     id: 1,
     title: 'Introduction to Robotics',
-    description: 'Learn the basics of robotics and build your first simple robot in this beginner-friendly course.',
+    description: 'Robototexnika asoslarini o‘rganing va boshlang‘ich darajadagi oddiy robotni yarating.',
     category: 'Robotics',
     image: 'https://images.unsplash.com/photo-1561144257-e32e8506ad14',
     duration: '4 weeks',
@@ -174,7 +174,7 @@ const courses = [
   {
     id: 2,
     title: 'Coding for Kids',
-    description: 'A fun introduction to programming concepts through games and interactive projects.',
+    description: 'O‘yinlar va interaktiv loyihalar orqali dasturlash tushunchalariga qiziqarli kirish.',
     category: 'Programming',
     image: 'https://images.unsplash.com/photo-1587620962725-abab7fe55159',
     duration: '6 weeks',
@@ -185,7 +185,7 @@ const courses = [
   {
     id: 3,
     title: 'AI Basics for Children',
-    description: 'Discover how artificial intelligence works through simple, engaging activities and examples.',
+    description: 'Sun’iy intellekt qanday ishlashini oddiy va qiziqarli mashg‘ulotlar hamda misollar orqali o‘rganing.',
     category: 'AI',
     image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a',
     duration: '3 weeks',
@@ -196,7 +196,7 @@ const courses = [
   {
     id: 4,
     title: 'Fun with Physics',
-    description: 'Explore physics concepts through hands-on experiments that bring science to life.',
+    description: 'Fizika tushunchalarini hayotga tatbiq etuvchi amaliy tajribalar orqali o‘rganing.',
     category: 'Physics',
     image: 'https://images.unsplash.com/photo-1507413245164-6160d8298b31',
     duration: '5 weeks',
@@ -207,7 +207,7 @@ const courses = [
   {
     id: 5,
     title: 'Advanced Robotics Projects',
-    description: 'Take your robotics skills to the next level with more complex projects and challenges.',
+    description: 'Robototexnika bo‘yicha ko‘nikmalaringizni yanada rivojlantiring va murakkab loyihalar hamda qiyinchiliklarni bajaring.',
     category: 'Robotics',
     image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a',
     duration: '8 weeks',
@@ -218,7 +218,7 @@ const courses = [
   {
     id: 6,
     title: 'JavaScript for Beginners',
-    description: 'Start your coding journey with JavaScript, the language of the web.',
+    description: 'JavaScript, vebning tili bilan dasturlashni boshlang.',
     category: 'Programming',
     image: 'https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a',
     duration: '7 weeks',
@@ -240,7 +240,7 @@ const Courses = () => {
   
   return (
     <CoursesContainer>
-      <PageTitle theme={theme}>Explore <span>Courses</span></PageTitle>
+      <PageTitle theme={theme}>O`rganish uchun <span>Kurslar</span></PageTitle>
       
       <CategoriesContainer>
         {categories.map(category => (

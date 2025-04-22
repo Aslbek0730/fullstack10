@@ -177,15 +177,15 @@ const NoteEditor = styled.textarea`
 // Dummy course data
 const courseData = {
   id: 1,
-  title: 'Introduction to Robotics',
-  description: 'Learn the basics of robotics and build your first simple robot in this beginner-friendly course.',
+  title: 'Robototexnika asoslari',
+  description: 'Robototexnika asoslarini o`rganing va boshlang`ich darajadagi oddiy robotni yaratishni o`rganing.',
   category: 'Robotics',
   image: 'https://images.unsplash.com/photo-1561144257-e32e8506ad14',
   lessons: [
     {
       id: 1,
-      title: 'What is Robotics?',
-      description: 'An introduction to the field of robotics and its applications in the modern world.',
+      title: 'Robototexnika nima?',
+      description: 'Robototexnika sohasi va uning zamonaviy dunyodagi qo`llanilishi bilan tanishuv.',
       videoId: 'xNTJIvMNjzI',
       duration: '15:30',
       isCompleted: true,
@@ -193,8 +193,8 @@ const courseData = {
     },
     {
       id: 2,
-      title: 'Basic Components of a Robot',
-      description: 'Learn about the essential components that make up a robot, including sensors, actuators, and controllers.',
+      title: 'Robotning asosiy qismlari',
+      description: 'Sensorlar, aktuatorlar va boshqaruvchilar kabi robotni tashkil etuvchi asosiy qismlar haqida bilib oling.',
       videoId: 'AOWvOHj_G3s',
       duration: '22:45',
       isCompleted: false,
@@ -202,8 +202,8 @@ const courseData = {
     },
     {
       id: 3,
-      title: 'Programming Your First Robot',
-      description: 'Step-by-step instructions for programming a simple robotic movement sequence.',
+      title: 'Birinchi robotingizni dasturlash',
+      description: 'Oddiy robot harakatlari ketma-ketligini dasturlash bo`yicha bosqichma-bosqich ko`rsatmalar.',
       videoId: 'V_peL8l2eXE',
       duration: '18:20',
       isCompleted: false,
@@ -211,8 +211,8 @@ const courseData = {
     },
     {
       id: 4,
-      title: 'Sensors and Inputs',
-      description: 'Discover how robots perceive the world through different types of sensors.',
+      title: 'Sensorlar va kirishlar',
+      description: 'Robotlar turli xil sensorlar orqali dunyoni qanday qabul qilishini bilib oling.',
       videoId: 'AOWvOHj_G3s',
       duration: '25:10',
       isCompleted: false,
@@ -220,8 +220,8 @@ const courseData = {
     },
     {
       id: 5,
-      title: 'Building Your First Robot',
-      description: 'Hands-on project to assemble and program a simple robot that can move and respond to its environment.',
+      title: 'Birinchi robotingizni yaratish',
+      description: 'Atrof-muhitga javob bera oladigan oddiy robotni yig`ish va dasturlash bo`yicha amaliy loyiha.',
       videoId: 'V_peL8l2eXE',
       duration: '30:00',
       isCompleted: false,

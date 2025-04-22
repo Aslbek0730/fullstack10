@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import { useTheme } from '../contexts/ThemeContext'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import Card from '../components/ui/Card'
 import Button from '../components/ui/Button'
 import { FaSun, FaMoon, FaGlobe, FaBell, FaBellSlash, FaTrash, FaExclamationTriangle } from 'react-icons/fa'

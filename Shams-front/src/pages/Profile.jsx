@@ -197,8 +197,8 @@ const FormActions = styled.div`
 
 // Dummy user data
 const userData = {
-  name: 'Alex Johnson',
-  email: 'alex.johnson@example.com',
+  name: 'Aslbek Axmedov',
+  email: 'aslbek.axmedov@gmail.com',
   avatar: null,
   courses: [
     {

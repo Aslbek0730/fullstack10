@@ -12,7 +12,7 @@ const LayoutContainer = styled.div`
 const Main = styled.main`
   flex: 1;
   padding: 16px;
-  margin-left: ${({ isSidebarOpen }) => (isSidebarOpen ? '240px' : '0')};
+  margin-left: ${({ $isSidebarOpen }) => ($isSidebarOpen ? '240px' : '0')};
   transition: margin-left ${({ theme }) => theme.transition};
   
   @media (max-width: 768px) {
@@ -40,7 +40,7 @@ const Layout = () => {
   return (
     <LayoutContainer>
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-      <Main isSidebarOpen={isSidebarOpen} theme={theme}>
+      <Main $isSidebarOpen={isSidebarOpen} theme={theme}>
         <Outlet />
       </Main>
     </LayoutContainer>

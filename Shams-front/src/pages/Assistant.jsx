@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import { useTheme } from '../contexts/ThemeContext'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Button from '../components/ui/Button'
 import { FaMicrophone, FaPaperPlane, FaVolumeUp, FaCopy } from 'react-icons/fa'
 
@@ -157,11 +157,11 @@ const TextInput = styled.textarea`
 
 // Dummy responses for the AI
 const aiResponses = [
-  "Hello! I'm your AI learning assistant. How can I help you today?",
-  "That's an interesting question! The planets in our solar system are: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune. Each planet is unique in its own way!",
-  "Robots are machines that can be programmed to do tasks automatically. They have sensors to understand their environment, processors to 'think', and actuators to move and interact with things around them. Would you like to know how to build a simple robot?",
-  "Artificial Intelligence (AI) is like teaching computers to think and learn, similar to how humans do. AI helps computers recognize patterns, solve problems, and make decisions. It's used in many things like virtual assistants, games, and even in helping doctors diagnose illnesses!",
-  "Gravity is like an invisible force that pulls objects toward each other. The bigger an object is, the stronger its gravity. That's why we stick to Earth instead of floating away, and why the Moon orbits around Earth. It's also why things fall down when you drop them!"
+  "Salom! Men sizning AI yordamchingizman. Nima yordam bera olishim mumkin?",
+  "Demak, siz robotlarni qanday qilib yaratishni bilishni istaysizmi?",
+  "Robotlar, mashina va dasturlar, ularning muhitini tushunish uchun sensorlar, tushunish uchun processorlar va ular atrofidagi narsalarni o'zgartirish uchun aktuatorlar bilan tayyorlangan mashinalar. Siz robotlarni qanday qilib yaratishni bilishni istasizmi?",
+  "Artificial Intelligence (AI) - bu dasturlarni o'qish va o'rganishga o'rgatish, insonlar kabi. AI dasturlar mavjud bo'lgan narsalarni tanlash, muammolarni hal qilish va qaror qabul qilishga yordam beradi. Ular virtual asistentlar, o'yinlar va hokazolarning tayyorlangan narsalari bilan birga, doctorlar yordamida kasalliklarni diagnostik qilishda ham ishlatiladi!",
+  "Gravity - bu narsalarni bir-biriga tortishchi, ko'rinmaydigan kuch. Ob'ektning hajmi shuncha katta bo'lsa, uning tortish kuchi shuncha katta bo'ladi. Shuning uchun biz Erda qolib, tushib ketmasdan, va Luni Ergashtirishning sababidir. Shuningdek, siz tushirgan narsalarni tushirish sababidir!"
 ]
 
 // Simulate typing effect
@@ -189,7 +189,6 @@ const Assistant = () => {
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [typedMessage, setTypedMessage] = useState('')
-  const [currentAiMessage, setCurrentAiMessage] = useState('')
   const messagesEndRef = useRef(null)
   
   // Scroll to bottom when messages change
@@ -222,18 +221,16 @@ const Assistant = () => {
     setMessages(prev => [...prev, userMessage])
     setInputValue('')
     
-    // Simulate AI thinking
+    // AI o'ylash
     setTimeout(() => {
       setIsTyping(true)
       
-      // Get a random response
+      // Random javob
       const randomResponse = aiResponses[Math.floor(Math.random() * (aiResponses.length - 1)) + 1]
-      setCurrentAiMessage(randomResponse)
       
-      // Start typing effect
+      // Efekt boshlash
       const clearTyping = typeMessage(randomResponse, setTypedMessage)
-      
-      // Add AI message after typing is complete
+      // AI javobi
       setTimeout(() => {
         const aiMessage = {
           id: messages.length + 2,

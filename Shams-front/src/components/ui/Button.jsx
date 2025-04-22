@@ -1,16 +1,17 @@
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import { useTheme } from '../../contexts/ThemeContext'
+import PropTypes from 'prop-types'
 
 const StyledButton = styled(motion.button)`
-  padding: ${({ size }) => 
-    size === 'small' ? '8px 16px' : 
-    size === 'large' ? '16px 24px' : 
+  padding: ${({ $size }) => 
+    $size === 'small' ? '8px 16px' : 
+    $size === 'large' ? '16px 24px' : 
     '12px 20px'
   };
-  font-size: ${({ size }) => 
-    size === 'small' ? '0.875rem' : 
-    size === 'large' ? '1.125rem' : 
+  font-size: ${({ $size }) => 
+    $size === 'small' ? '0.875rem' : 
+    $size === 'large' ? '1.125rem' : 
     '1rem'
   };
   font-weight: 500;
@@ -24,8 +25,8 @@ const StyledButton = styled(motion.button)`
   position: relative;
   overflow: hidden;
   
-  ${({ variant, theme }) => {
-    switch(variant) {
+  ${({ $variant, theme }) => {
+    switch($variant) {
       case 'outline':
         return `
           background: transparent;
@@ -68,8 +69,8 @@ const StyledButton = styled(motion.button)`
     }
   }}
   
-  ${({ disabled, theme }) => 
-    disabled && `
+  ${({ $disabled, theme }) => 
+    $disabled && `
       opacity: 0.6;
       cursor: not-allowed;
       
@@ -80,21 +81,21 @@ const StyledButton = styled(motion.button)`
   }
   
   svg {
-    margin-right: ${({ iconOnly }) => iconOnly ? '0' : '8px'};
+    margin-right: ${({ $iconOnly }) => $iconOnly ? '0' : '8px'};
   }
   
-  ${({ glowEffect, theme }) => 
-    glowEffect && `
+  ${({ $glowEffect, theme }) => 
+    $glowEffect && `
       &:hover {
         box-shadow: 0 0 15px ${theme.colors.primary[400]};
       }
     `
   }
   
-  ${({ iconOnly }) => 
-    iconOnly && `
-      width: ${iconOnly === 'small' ? '36px' : '48px'};
-      height: ${iconOnly === 'small' ? '36px' : '48px'};
+  ${({ $iconOnly }) => 
+    $iconOnly && `
+      width: ${$iconOnly === 'small' ? '36px' : '48px'};
+      height: ${$iconOnly === 'small' ? '36px' : '48px'};
       padding: 0;
       border-radius: 50%;
     `
@@ -117,12 +118,12 @@ export const Button = ({
   return (
     <StyledButton 
       onClick={disabled ? undefined : onClick} 
-      variant={variant} 
-      size={size} 
-      disabled={disabled} 
+      $variant={variant} 
+      $size={size} 
+      $disabled={disabled} 
       theme={theme}
-      glowEffect={glowEffect}
-      iconOnly={iconOnly}
+      $glowEffect={glowEffect}
+      $iconOnly={iconOnly}
       whileTap={{ scale: disabled ? 1 : 0.95 }}
       {...props}
     >
@@ -130,6 +131,17 @@ export const Button = ({
       {!iconOnly && children}
     </StyledButton>
   )
+}
+
+Button.propTypes = {
+  children: PropTypes.node,
+  onClick: PropTypes.func,
+  variant: PropTypes.oneOf(['primary', 'secondary', 'outline', 'gradient']),
+  size: PropTypes.oneOf(['small', 'medium', 'large']),
+  disabled: PropTypes.bool,
+  icon: PropTypes.node,
+  glowEffect: PropTypes.bool,
+  iconOnly: PropTypes.oneOfType([PropTypes.bool, PropTypes.oneOf(['small'])]),
 }
 
 export default Button

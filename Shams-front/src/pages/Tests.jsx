@@ -179,7 +179,7 @@ const tests = [
   {
     id: 1,
     title: 'Robotics Basics',
-    description: 'Test your knowledge of fundamental robotics concepts and terminology.',
+    description: 'Test sizning robototexnika asoslari bo`yicha bilimlaringizni baholaydi.',
     category: 'Robotics',
     questions: 10,
     timeLimit: '15 min',
@@ -191,7 +191,7 @@ const tests = [
   {
     id: 2,
     title: 'Coding Fundamentals',
-    description: 'Check your understanding of basic programming concepts and syntax.',
+    description: 'Tushunchalar va kod yozish asoslari bo`yicha bilimlaringizni baholaydi.',
     category: 'Programming',
     questions: 15,
     timeLimit: '20 min',
@@ -200,7 +200,7 @@ const tests = [
   {
     id: 3,
     title: 'AI Concepts',
-    description: 'Test your knowledge about artificial intelligence and machine learning basics.',
+    description: 'Test sizning sun`iy intellekt va mashinani o`rganish bo`yicha bilimlaringizni baholaydi.',
     category: 'AI',
     questions: 12,
     timeLimit: '18 min',
@@ -209,7 +209,7 @@ const tests = [
   {
     id: 4,
     title: 'Physics Laws',
-    description: 'Evaluate your understanding of basic physics principles and laws.',
+    description: 'Sizning fizika qonunlari va tushunchalari bo`yicha bilimlaringizni baholaydi.',
     category: 'Physics',
     questions: 10,
     timeLimit: '15 min',
@@ -221,7 +221,7 @@ const tests = [
   {
     id: 5,
     title: 'Robot Movement',
-    description: 'Test your knowledge of how robots move and navigate their environment.',
+    description: 'Test sizning robot harakatlari va sensorlar bo`yicha bilimlaringizni baholaydi.',
     category: 'Robotics',
     questions: 8,
     timeLimit: '12 min',
@@ -230,7 +230,7 @@ const tests = [
   {
     id: 6,
     title: 'JavaScript Basics',
-    description: 'Evaluate your understanding of JavaScript fundamentals and syntax.',
+    description: 'JavaScript dasturlash tili bo`yicha bilimlaringizni baholaydi.',
     category: 'Programming',
     questions: 20,
     timeLimit: '25 min',
@@ -250,7 +250,7 @@ const Tests = () => {
   
   return (
     <TestsContainer>
-      <PageTitle theme={theme}>Knowledge <span>Tests</span></PageTitle>
+      <PageTitle theme={theme}>Bilimdon <span>Testlar</span></PageTitle>
       
       <CategoriesContainer>
         {categories.map(category => (

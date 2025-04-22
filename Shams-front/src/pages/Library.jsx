@@ -146,7 +146,7 @@ const books = [
     id: 1,
     title: 'Introduction to Robotics for Kids',
     author: 'Emily Chen',
-    description: 'A colorful, engaging introduction to robotics concepts designed specifically for young inventors.',
+    description: 'Bu rangli dunyo va robotlar haqida qiziqarli ma`lumotlar.',
     cover: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a',
     category: 'free',
     price: 'Free'
@@ -155,7 +155,7 @@ const books = [
     id: 2,
     title: 'Coding Adventures',
     author: 'Mark Johnson',
-    description: 'Learn programming concepts through fun, interactive stories and challenges.',
+    description: 'Dasturlashni o`rganish uchun qiziqarli va interaktiv darslar.',
     cover: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c',
     category: 'paid',
     price: '$12.99'
@@ -164,7 +164,7 @@ const books = [
     id: 3,
     title: 'AI for Beginners',
     author: 'Sarah Williams',
-    description: 'Discover the fascinating world of artificial intelligence with simple explanations and examples.',
+    description: 'Dunyodagi eng yangi texnologiyalarni o`rganish uchun asosiy qo`llanma.',
     cover: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485',
     category: 'paid',
     price: '$14.99',
@@ -175,7 +175,7 @@ const books = [
     id: 4,
     title: 'Physics Experiments at Home',
     author: 'Dr. Alex Cooper',
-    description: 'Easy and safe physics experiments that can be done with household items.',
+    description: 'Oson va qiziqarli fizik tajribalar bilan o`z bilimlaringizni kengaytiring.',
     cover: 'https://images.unsplash.com/photo-1576086213369-97a306d36557',
     category: 'free',
     price: 'Free'
@@ -184,7 +184,7 @@ const books = [
     id: 5,
     title: 'Robotics Projects: Level 1',
     author: 'James Miller',
-    description: 'Step-by-step instructions for building simple robots using accessible materials.',
+    description: 'Qadamba qadam o`rganish uchun qiziqarli robototexnika loyihalari.',
     cover: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e',
     category: 'paid',
     price: '$19.99',
@@ -195,7 +195,7 @@ const books = [
     id: 6,
     title: 'The Innovation Mindset',
     author: 'Dr. Lisa Brown',
-    description: 'How to cultivate creativity and innovative thinking in children and adults alike.',
+    description: 'Qanday qilib innovatsion fikrlashni rivojlantirish mumkinligi haqida.',
     cover: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8',
     category: 'free',
     price: 'Free'
@@ -220,7 +220,7 @@ const Library = () => {
   
   return (
     <LibraryContainer>
-      <PageTitle theme={theme}>Digital <span>Library</span></PageTitle>
+      <PageTitle theme={theme}>Aqlli <span>Kutubxona</span></PageTitle>
       
       <CategoriesContainer>
         {categories.map(category => (
