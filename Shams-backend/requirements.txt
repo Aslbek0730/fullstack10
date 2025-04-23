@@ -3,7 +3,6 @@ djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.1
 dj-rest-auth==5.0.2
 django-allauth==0.61.1
-psycopg2-binary==2.9.9
 python-dotenv==1.0.1
 celery==5.3.6
 redis==5.0.1

@@ -12,7 +12,7 @@ class ChatMessage(models.Model):
         ('assistant', 'Yordamchi'),
     )
     
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='chat_messages')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='course_chat_messages')
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     content = models.TextField()
     audio_url = models.URLField(blank=True, null=True)  # Text-to-speech uchun
@@ -49,6 +49,7 @@ class Course(models.Model):
     """Kurs"""
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(_('title'), max_length=255)
+    slug = models.SlugField(_('slug'), unique=True)
     description = models.TextField(_('description'))
     category = models.CharField(
         _('category'),
@@ -74,6 +75,7 @@ class Course(models.Model):
         on_delete=models.CASCADE,
         related_name='created_courses'
     )
+    is_active = models.BooleanField(_('is active'), default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -93,6 +95,7 @@ class Lesson(models.Model):
     video_url = models.URLField(_('video url'))
     description = models.TextField(_('description'), blank=True)
     order = models.PositiveIntegerField(_('order'), default=0)
+    is_active = models.BooleanField(_('is active'), default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -112,6 +115,7 @@ class Enrollment(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrollments')
     progress = models.PositiveIntegerField(_('progress'), default=0)  # 0-100%
     enrolled_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:

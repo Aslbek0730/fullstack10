@@ -24,6 +24,7 @@ class Test(models.Model):
         on_delete=models.CASCADE,
         related_name='created_tests'
     )
+    is_active = models.BooleanField(_('is active'), default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

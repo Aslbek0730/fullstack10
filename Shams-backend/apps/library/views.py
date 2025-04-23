@@ -4,13 +4,13 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.cache import cache
+from django.db import models
 from .models import Book, BookDownload, BookPurchase
 from .serializers import (
     BookSerializer, BookDetailSerializer, BookCreateSerializer,
     BookUpdateSerializer, BookPurchaseSerializer, BookPurchaseCreateSerializer,
     BookDownloadSerializer
 )
-from django.core import models
 import uuid
 from apps.accounts.models import UserActivity
 

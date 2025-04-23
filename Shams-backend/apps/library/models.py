@@ -39,6 +39,7 @@ class Book(models.Model):
         on_delete=models.CASCADE,
         related_name='uploaded_books'
     )
+    is_active = models.BooleanField(_('is active'), default=True)
     download_count = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

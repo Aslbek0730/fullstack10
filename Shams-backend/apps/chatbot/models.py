@@ -8,7 +8,7 @@ class ChatMessage(models.Model):
         ('assistant', 'Yordamchi'),
     )
     
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='chat_messages')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bot_chat_messages')
     role = models.CharField(max_length=10, choices=ROLES)
     content = models.TextField()
     audio_url = models.URLField(blank=True, null=True)  # Text-to-speech uchun

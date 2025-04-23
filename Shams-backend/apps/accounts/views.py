@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import viewsets, status, generics, permissions
 from django.core.cache import cache
 from .models import User, UserActivity, UserProgress, EmailVerificationToken, PasswordResetToken
 from .serializers import (
@@ -9,18 +10,13 @@ from .serializers import (
     UserActivitySerializer,
     UserProgressSerializer,
     UserSerializer,
-    RegisterSerializer,
-    LoginSerializer,
-    SocialLoginSerializer,
-    PasswordResetSerializer,
-    PasswordResetConfirmSerializer,
-    ProfileUpdateSerializer,
     UserRegisterSerializer,
     UserLoginSerializer,
     UserProfileUpdateSerializer,
-    OAuthLoginSerializer
+    OAuthLoginSerializer,
+    PasswordResetSerializer,
+    PasswordResetConfirmSerializer
 )
-from rest_framework import viewsets, status, generics
 from rest_framework.decorators import action
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
@@ -104,7 +100,7 @@ class AuthViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['post'])
     def register(self, request):
         """Ro'yxatdan o'tish"""
-        serializer = RegisterSerializer(data=request.data)
+        serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
             
@@ -136,7 +132,7 @@ class AuthViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['post'])
     def login(self, request):
         """Kirish"""
-        serializer = LoginSerializer(data=request.data)
+        serializer = UserLoginSerializer(data=request.data)
         if serializer.is_valid():
             user = authenticate(
                 email=serializer.validated_data['email'],
