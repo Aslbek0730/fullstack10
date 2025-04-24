@@ -115,29 +115,22 @@ const ProfileTabs = styled.div`
   }
 `
 
-const TabButton = styled.button`
-  padding: 12px 16px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-family: 'Poppins', sans-serif;
-  font-size: 1rem;
-  font-weight: 500;
-  color: ${({ isActive, theme }) => 
-    isActive ? theme.colors.primary[400] : theme.colors.text
-  };
-  border-bottom: 3px solid ${({ isActive, theme }) => 
-    isActive ? theme.colors.primary[400] : 'transparent'
-  };
-  transition: all ${({ theme }) => theme.transition};
-  white-space: nowrap;
+const TabButton = styled(Button)`
+  position: relative;
+  overflow: hidden;
   
-  &:hover {
-    color: ${({ theme }) => theme.colors.primary[400]};
-  }
-  
-  svg {
-    margin-right: 8px;
+  ${({ $isActive, theme }) => 
+    $isActive && `
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, ${theme.colors.primary[400]}, ${theme.colors.secondary[400]});
+      }
+    `
   }
 `
 
@@ -377,7 +370,7 @@ const Profile = () => {
           
           <ProfileTabs theme={theme}>
             <TabButton 
-              isActive={activeTab === 'courses'} 
+              $isActive={activeTab === 'courses'} 
               onClick={() => handleTabChange('courses')}
               theme={theme}
             >
@@ -385,7 +378,7 @@ const Profile = () => {
               My Courses
             </TabButton>
             <TabButton 
-              isActive={activeTab === 'tests'} 
+              $isActive={activeTab === 'tests'} 
               onClick={() => handleTabChange('tests')}
               theme={theme}
             >
@@ -393,7 +386,7 @@ const Profile = () => {
               My Tests
             </TabButton>
             <TabButton 
-              isActive={activeTab === 'books'} 
+              $isActive={activeTab === 'books'} 
               onClick={() => handleTabChange('books')}
               theme={theme}
             >

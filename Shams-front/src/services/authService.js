@@ -1,55 +1,70 @@
-import axios from 'axios';
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+import api from '../config/api';
 
 const authService = {
     // Register new user
     register: async (userData) => {
-        const response = await axios.post(`${API_URL}/auth/register/`, userData);
-        return response.data;
+        try {
+            const response = await api.post('/accounts/auth/register/', userData);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
     },
 
     // Verify email
     verifyEmail: async (token) => {
-        const response = await axios.get(`${API_URL}/auth/verify-email/?token=${token}`);
-        return response.data;
+        try {
+            const response = await api.get(`/auth/verify-email/${token}/`);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
     },
 
     // Login with email/password
     login: async (credentials) => {
-        const response = await axios.post(`${API_URL}/auth/login/`, credentials);
-        if (response.data.access) {
-            localStorage.setItem('user', JSON.stringify(response.data));
+        try {
+            const response = await api.post('/accounts/auth/login/', credentials);
+            if (response.data.access) {
+                localStorage.setItem('access_token', response.data.access);
+                localStorage.setItem('refresh_token', response.data.refresh);
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+            }
+            return response.data;
+        } catch (error) {
+            throw error;
         }
-        return response.data;
     },
 
     // Refresh token
-    refreshToken: async (refresh) => {
-        const response = await axios.post(`${API_URL}/auth/token/refresh/`, { refresh });
-        if (response.data.access) {
-            const user = JSON.parse(localStorage.getItem('user'));
-            user.access = response.data.access;
-            localStorage.setItem('user', JSON.stringify(user));
+    refreshToken: async () => {
+        try {
+            const refresh = localStorage.getItem('refresh_token');
+            const response = await api.post('/accounts/auth/token/refresh/', { refresh });
+            if (response.data.access) {
+                localStorage.setItem('access_token', response.data.access);
+            }
+            return response.data;
+        } catch (error) {
+            throw error;
         }
-        return response.data;
     },
 
     // Password reset request
     requestPasswordReset: async (email) => {
-        const response = await axios.post(`${API_URL}/auth/password-reset/`, { email });
+        const response = await api.post('/auth/password-reset/', { email });
         return response.data;
     },
 
     // Confirm password reset
     confirmPasswordReset: async (data) => {
-        const response = await axios.post(`${API_URL}/auth/password-reset/confirm/`, data);
+        const response = await api.post('/auth/password-reset/confirm/', data);
         return response.data;
     },
 
     // Google OAuth login
     googleLogin: async (accessToken) => {
-        const response = await axios.post(`${API_URL}/auth/google-login/`, { access_token: accessToken });
+        const response = await api.post('/auth/google-login/', { access_token: accessToken });
         if (response.data.access) {
             localStorage.setItem('user', JSON.stringify(response.data));
         }
@@ -58,7 +73,7 @@ const authService = {
 
     // Facebook OAuth login
     facebookLogin: async (accessToken) => {
-        const response = await axios.post(`${API_URL}/auth/facebook-login/`, { access_token: accessToken });
+        const response = await api.post('/auth/facebook-login/', { access_token: accessToken });
         if (response.data.access) {
             localStorage.setItem('user', JSON.stringify(response.data));
         }
@@ -67,7 +82,15 @@ const authService = {
 
     // Logout
     logout: () => {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
         localStorage.removeItem('user');
+    },
+
+    // Check if user is authenticated
+    isAuthenticated: () => {
+        const token = localStorage.getItem('access_token');
+        return !!token;
     },
 
     // Get current user
@@ -75,18 +98,19 @@ const authService = {
         return JSON.parse(localStorage.getItem('user'));
     },
 
+    // Get auth token
+    getToken: () => {
+        return localStorage.getItem('access_token');
+    },
+
     // Update user profile
     updateProfile: async (userData) => {
         const user = JSON.parse(localStorage.getItem('user'));
-        const response = await axios.patch(
-            `${API_URL}/profile/`,
-            userData,
-            {
-                headers: {
-                    'Authorization': `Bearer ${user.access}`
-                }
+        const response = await api.patch('/profile/', userData, {
+            headers: {
+                'Authorization': `Bearer ${user.access}`
             }
-        );
+        });
         return response.data;
     }
 };

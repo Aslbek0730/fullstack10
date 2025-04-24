@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import { Button } from '../components/ui/Button'
+import authService from '../services/authService'
 
 const StyledRegisterPage = styled.div`
   min-height: 100vh;
@@ -105,10 +106,21 @@ const RegisterPage = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const navigate = useNavigate()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // TODO: Implement registration logic
-    navigate('/app/dashboard')
+    const formData = {
+      email: e.target.email.value,
+      username: e.target.username.value,
+      password1: e.target.password1.value,
+      password2: e.target.password2.value,
+    }
+
+    try {
+      await authService.register(formData)
+      navigate('/login')
+    } catch (error) {
+      console.error('Registration error:', error)
+    }
   }
 
   return (
@@ -140,15 +152,8 @@ const RegisterPage = () => {
             <InputGroup>
               <Input
                 type="text"
-                placeholder="Ism"
-                required
-              />
-            </InputGroup>
-
-            <InputGroup>
-              <Input
-                type="text"
-                placeholder="Familiya"
+                name="username"
+                placeholder="Foydalanuvchi nomi"
                 required
               />
             </InputGroup>
@@ -156,6 +161,7 @@ const RegisterPage = () => {
             <InputGroup>
               <Input
                 type="email"
+                name="email"
                 placeholder="Email"
                 required
               />
@@ -164,6 +170,7 @@ const RegisterPage = () => {
             <InputGroup>
               <Input
                 type={showPassword ? 'text' : 'password'}
+                name="password1"
                 placeholder="Parol"
                 required
               />
@@ -178,6 +185,7 @@ const RegisterPage = () => {
             <InputGroup>
               <Input
                 type={showConfirmPassword ? 'text' : 'password'}
+                name="password2"
                 placeholder="Parolni tasdiqlang"
                 required
               />

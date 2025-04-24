@@ -3,8 +3,8 @@ import { motion } from 'framer-motion'
 import { useTheme } from '../../contexts/ThemeContext'
 
 const StyledCard = styled(motion.div)`
-  background: ${({ theme, gradient }) => 
-    gradient 
+  background: ${({ theme, $gradient }) => 
+    $gradient 
       ? theme.name === 'dark' 
         ? 'linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%)' 
         : 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)'
@@ -18,16 +18,16 @@ const StyledCard = styled(motion.div)`
   border: 1px solid ${({ theme }) => theme.colors.border};
   position: relative;
   
-  ${({ glowEffect, theme }) => 
-    glowEffect && `
+  ${({ $glowEffect, theme }) => 
+    $glowEffect && `
       &:hover {
         animation: glow 2s infinite alternate;
       }
     `
   }
   
-  ${({ blurEffect, theme }) => 
-    blurEffect && `
+  ${({ $blurEffect, theme }) => 
+    $blurEffect && `
       backdrop-filter: blur(8px);
       background: ${
         theme.name === 'dark' 
@@ -77,9 +77,9 @@ export const Card = ({
   return (
     <StyledCard 
       theme={theme} 
-      gradient={gradient} 
-      glowEffect={glowEffect} 
-      blurEffect={blurEffect}
+      $gradient={gradient} 
+      $glowEffect={glowEffect} 
+      $blurEffect={blurEffect}
       padding={padding}
       whileHover={{ y: -5 }}
       transition={{ type: 'spring', stiffness: 300 }}

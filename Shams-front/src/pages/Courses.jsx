@@ -65,7 +65,7 @@ const CourseCard = styled(Card)`
 
 const CourseImage = styled.div`
   height: 160px;
-  background-image: url(${({ image }) => image});
+  background-image: url(${({ $image }) => $image});
   background-size: cover;
   background-position: center;
   margin: -16px -16px 16px -16px;
@@ -88,12 +88,12 @@ const CourseCategory = styled.span`
   position: absolute;
   top: 16px;
   left: 16px;
-  background: ${({ category, theme }) => 
-    category === 'Robotics' 
+  background: ${({ $category, theme }) => 
+    $category === 'Robotics' 
       ? theme.colors.primary[400] 
-      : category === 'Programming' 
+      : $category === 'Programming' 
       ? theme.colors.secondary[400]
-      : category === 'AI' 
+      : $category === 'AI' 
       ? theme.colors.accent[400]
       : theme.colors.warning[400]
   };
@@ -163,7 +163,7 @@ const courses = [
   {
     id: 1,
     title: 'Introduction to Robotics',
-    description: 'Robototexnika asoslarini o‘rganing va boshlang‘ich darajadagi oddiy robotni yarating.',
+    description: 'Robototexnika asoslarini o\'rganing va boshlang\'ich darajadagi oddiy robotni yarating.',
     category: 'Robotics',
     image: 'https://images.unsplash.com/photo-1561144257-e32e8506ad14',
     duration: '4 weeks',
@@ -174,7 +174,7 @@ const courses = [
   {
     id: 2,
     title: 'Coding for Kids',
-    description: 'O‘yinlar va interaktiv loyihalar orqali dasturlash tushunchalariga qiziqarli kirish.',
+    description: 'O\'yinlar va interaktiv loyihalar orqali dasturlash tushunchalariga qiziqarli kirish.',
     category: 'Programming',
     image: 'https://images.unsplash.com/photo-1587620962725-abab7fe55159',
     duration: '6 weeks',
@@ -185,7 +185,7 @@ const courses = [
   {
     id: 3,
     title: 'AI Basics for Children',
-    description: 'Sun’iy intellekt qanday ishlashini oddiy va qiziqarli mashg‘ulotlar hamda misollar orqali o‘rganing.',
+    description: 'Sun\'iy intellekt qanday ishlashini oddiy va qiziqarli mashg\'ulotlar hamda misollar orqali o\'rganing.',
     category: 'AI',
     image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a',
     duration: '3 weeks',
@@ -196,7 +196,7 @@ const courses = [
   {
     id: 4,
     title: 'Fun with Physics',
-    description: 'Fizika tushunchalarini hayotga tatbiq etuvchi amaliy tajribalar orqali o‘rganing.',
+    description: 'Fizika tushunchalarini hayotga tatbiq etuvchi amaliy tajribalar orqali o\'rganing.',
     category: 'Physics',
     image: 'https://images.unsplash.com/photo-1507413245164-6160d8298b31',
     duration: '5 weeks',
@@ -207,7 +207,7 @@ const courses = [
   {
     id: 5,
     title: 'Advanced Robotics Projects',
-    description: 'Robototexnika bo‘yicha ko‘nikmalaringizni yanada rivojlantiring va murakkab loyihalar hamda qiyinchiliklarni bajaring.',
+    description: 'Robototexnika bo\'yicha ko\'nikmalaringizni yanada rivojlantiring va murakkab loyihalar hamda qiyinchiliklarni bajaring.',
     category: 'Robotics',
     image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a',
     duration: '8 weeks',
@@ -264,9 +264,9 @@ const Courses = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <CourseCard as={Link} to={`/courses/${course.id}`} blurEffect>
-              <CourseImage image={course.image} theme={theme}>
-                <CourseCategory category={course.category} theme={theme}>
+            <CourseCard as={Link} to={`/courses/${course.id}`} $blurEffect>
+              <CourseImage $image={course.image} theme={theme}>
+                <CourseCategory $category={course.category} theme={theme}>
                   {course.category}
                 </CourseCategory>
               </CourseImage>

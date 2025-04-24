@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import { Button } from '../components/ui/Button'
+import authService from '../services/authService'
 
 const StyledLoginPage = styled.div`
   min-height: 100vh;
@@ -96,11 +97,38 @@ const SocialButton = styled(Button)`
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  })
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // TODO: Implement login logic
-    navigate('/app/dashboard')
+    setError('')
+    setLoading(true)
+
+    try {
+      await authService.login(formData)
+      
+      // Get redirect URL or default to app/dashboard
+      const redirectUrl = sessionStorage.getItem('redirectUrl') || '/app/dashboard'
+      sessionStorage.removeItem('redirectUrl')
+      
+      navigate(redirectUrl)
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Login failed. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -129,11 +157,19 @@ const LoginPage = () => {
           <h2 style={{ fontSize: '2rem', marginBottom: '2rem', color: '#1a1a1a' }}>Kirish</h2>
 
           <LoginForm onSubmit={handleSubmit}>
+            {error && (
+              <div className="rounded-md bg-red-50 p-4">
+                <div className="text-sm text-red-700">{error}</div>
+              </div>
+            )}
             <InputGroup>
               <Input
                 type="email"
                 placeholder="Email"
                 required
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
               />
             </InputGroup>
 
@@ -142,6 +178,9 @@ const LoginPage = () => {
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Parol"
                 required
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
               />
               <PasswordToggle
                 type="button"
@@ -155,8 +194,8 @@ const LoginPage = () => {
               Parolni unutdingizmi?
             </Link>
 
-            <Button type="submit" variant="gradient">
-              Kirish
+            <Button type="submit" variant="gradient" disabled={loading}>
+              {loading ? 'Signing in...' : 'Kirish'}
             </Button>
 
             <div style={{ textAlign: 'center', margin: '1rem 0' }}>

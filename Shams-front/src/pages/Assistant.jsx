@@ -61,15 +61,15 @@ const MessagesContainer = styled.div`
 const MessageItem = styled(motion.div)`
   display: flex;
   margin-bottom: 16px;
-  flex-direction: ${({ isUser }) => isUser ? 'row-reverse' : 'row'};
+  flex-direction: ${({ $isUser }) => $isUser ? 'row-reverse' : 'row'};
 `
 
 const Avatar = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: ${({ isUser, theme }) => 
-    isUser 
+  background: ${({ $isUser, theme }) => 
+    $isUser 
       ? theme.colors.secondary[400] 
       : theme.colors.primary[400]
   };
@@ -78,11 +78,11 @@ const Avatar = styled.div`
   justify-content: center;
   color: white;
   font-weight: 600;
-  margin: ${({ isUser }) => isUser ? '0 0 0 12px' : '0 12px 0 0'};
+  margin: ${({ $isUser }) => $isUser ? '0 0 0 12px' : '0 12px 0 0'};
   flex-shrink: 0;
   
-  ${({ isAI, theme }) => 
-    isAI && `
+  ${({ $isAI, theme }) => 
+    $isAI && `
       background: linear-gradient(135deg, ${theme.colors.primary[400]} 0%, ${theme.colors.secondary[400]} 100%);
       box-shadow: 0 0 10px ${theme.colors.primary[400]};
     `
@@ -90,15 +90,15 @@ const Avatar = styled.div`
 `
 
 const MessageBubble = styled.div`
-  background: ${({ isUser, theme }) => 
-    isUser 
+  background: ${({ $isUser, theme }) => 
+    $isUser 
       ? theme.colors.secondary[400] 
       : theme.name === 'dark' 
         ? 'rgba(45, 45, 45, 0.9)' 
         : 'rgba(255, 255, 255, 0.9)'
   };
-  color: ${({ isUser, theme }) => 
-    isUser 
+  color: ${({ $isUser, theme }) => 
+    $isUser 
       ? 'white' 
       : theme.colors.text
   };
@@ -119,7 +119,7 @@ const MessageControls = styled.div`
   display: flex;
   gap: 8px;
   margin-top: 8px;
-  justify-content: ${({ isUser }) => isUser ? 'flex-end' : 'flex-start'};
+  justify-content: ${({ $isUser }) => $isUser ? 'flex-end' : 'flex-start'};
 `
 
 const InputContainer = styled.div`
@@ -262,19 +262,19 @@ const Assistant = () => {
     return messages.map(message => (
       <MessageItem 
         key={message.id} 
-        isUser={message.isUser}
+        $isUser={message.isUser}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <Avatar isUser={message.isUser} isAI={!message.isUser} theme={theme}>
+        <Avatar $isUser={message.isUser} $isAI={!message.isUser} theme={theme}>
           {message.isUser ? 'U' : 'AI'}
         </Avatar>
         <div>
-          <MessageBubble isUser={message.isUser} theme={theme}>
+          <MessageBubble $isUser={message.isUser} theme={theme}>
             <p>{message.text}</p>
           </MessageBubble>
-          <MessageControls isUser={message.isUser}>
+          <MessageControls $isUser={message.isUser}>
             {!message.isUser && (
               <>
                 <Button 
@@ -309,15 +309,15 @@ const Assistant = () => {
           
           {isTyping && (
             <MessageItem 
-              isUser={false}
+              $isUser={false}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <Avatar isUser={false} isAI theme={theme}>
+              <Avatar $isUser={false} $isAI theme={theme}>
                 AI
               </Avatar>
-              <MessageBubble isUser={false} theme={theme}>
+              <MessageBubble $isUser={false} theme={theme}>
                 <p>{typedMessage}</p>
                 <span style={{ display: 'inline-block', width: '4px', height: '16px', background: theme.colors.primary[400], marginLeft: '2px', animation: 'blink 1s infinite' }}></span>
               </MessageBubble>

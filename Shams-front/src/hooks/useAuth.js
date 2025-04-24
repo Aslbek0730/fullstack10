@@ -1,69 +1,81 @@
 import { useState, useEffect } from 'react';
-import { authService } from '../services/api';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-export const useAuth = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+const useAuth = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const token = localStorage.getItem('access_token');
+        const token = localStorage.getItem('token');
         if (token) {
-            checkAuth();
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            // Fetch user data
+            axios.get('/api/auth/user/')
+                .then(response => {
+                    setUser(response.data);
+                    setLoading(false);
+                })
+                .catch(error => {
+                    console.error('Error fetching user:', error);
+                    setError(error);
+                    setLoading(false);
+                    localStorage.removeItem('token');
+                    delete axios.defaults.headers.common['Authorization'];
+                });
         } else {
             setLoading(false);
         }
     }, []);
 
-    const checkAuth = async () => {
+    const login = async (credentials) => {
         try {
-            const response = await authService.getProfile();
-            setUser(response.data);
-            setIsAuthenticated(true);
-        } catch (_) {
-            localStorage.removeItem('access_token');
-            localStorage.removeItem('refresh_token');
-            setIsAuthenticated(false);
-            setUser(null);
-        } finally {
-            setLoading(false);
+            const response = await axios.post('/api/auth/login/', credentials);
+            const { token, user } = response.data;
+            localStorage.setItem('token', token);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            setUser(user);
+            navigate('/app/dashboard');
+            return { success: true };
+        } catch (error) {
+            setError(error.response?.data || { message: 'An error occurred during login' });
+            return { success: false, error: error.response?.data };
         }
     };
 
-    const login = async (credentials) => {
-        const response = await authService.login(credentials);
-        const { access, refresh, user } = response.data;
-        localStorage.setItem('access_token', access);
-        localStorage.setItem('refresh_token', refresh);
-        setUser(user);
-        setIsAuthenticated(true);
-        return user;
-    };
-
     const register = async (userData) => {
-        const response = await authService.register(userData);
-        const { access, refresh, user } = response.data;
-        localStorage.setItem('access_token', access);
-        localStorage.setItem('refresh_token', refresh);
-        setUser(user);
-        setIsAuthenticated(true);
-        return user;
+        try {
+            const response = await axios.post('/api/auth/register/', userData);
+            const { token, user } = response.data;
+            localStorage.setItem('token', token);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            setUser(user);
+            navigate('/app/dashboard');
+            return { success: true };
+        } catch (error) {
+            setError(error.response?.data || { message: 'An error occurred during registration' });
+            return { success: false, error: error.response?.data };
+        }
     };
 
     const logout = () => {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('token');
+        delete axios.defaults.headers.common['Authorization'];
         setUser(null);
-        setIsAuthenticated(false);
+        navigate('/');
     };
 
     return {
-        isAuthenticated,
         user,
         loading,
+        error,
         login,
         register,
         logout,
-        checkAuth
+        isAuthenticated: !!user
     };
-}; 
+};
+
+export default useAuth; 

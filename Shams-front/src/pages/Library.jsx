@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useTheme } from '../contexts/ThemeContext'
 import { motion } from 'framer-motion'
 import Card from '../components/ui/Card'
 import Button from '../components/ui/Button'
 import { Link } from 'react-router-dom'
-import { FaBook, FaDownload, FaLock, FaTags } from 'react-icons/fa'
+import { FaBook, FaDownload, FaShoppingCart } from 'react-icons/fa'
+import { bookService } from '../services/api'
 
 const LibraryContainer = styled.div`
   padding: 24px 0;
@@ -17,36 +18,6 @@ const PageTitle = styled.h1`
   
   span {
     color: ${({ theme }) => theme.colors.primary[400]};
-  }
-`
-
-const CategoriesContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 32px;
-  
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-`
-
-const CategoryButton = styled(Button)`
-  position: relative;
-  overflow: hidden;
-  
-  ${({ isActive, theme }) => 
-    isActive && `
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background: linear-gradient(90deg, ${theme.colors.primary[400]}, ${theme.colors.secondary[400]});
-      }
-    `
   }
 `
 
@@ -66,61 +37,34 @@ const BookCard = styled(Card)`
 
 const BookCover = styled.div`
   height: 320px;
-  background-image: url(${({ cover }) => cover});
+  background-image: url(${({ $cover }) => $cover});
   background-size: cover;
   background-position: center;
   margin: -16px -16px 16px -16px;
   position: relative;
-  
-  ${({ isPaid, theme }) => 
-    isPaid && `
-      &::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.4);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 2rem;
-      }
-    `
-  }
 `
 
-const BookPriceTag = styled.div`
+const BookCategory = styled.div`
   position: absolute;
   top: 16px;
   right: 16px;
-  background: ${({ isPaid, isDiscounted, theme }) => 
-    isDiscounted 
-      ? theme.colors.success[400] 
-      : isPaid 
-      ? theme.colors.secondary[400]
-      : theme.colors.primary[400]
+  background: ${({ $category, theme }) => 
+    $category === 'free' ? theme.colors.success[400] : 
+    $category === 'paid' ? theme.colors.secondary[400] : 
+    theme.colors.primary[400]
   };
   color: white;
   padding: 4px 12px;
   border-radius: 16px;
   font-size: 0.85rem;
   font-weight: 500;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  
-  svg {
-    margin-right: 4px;
-  }
 `
 
 const BookInfo = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  padding: 16px;
 `
 
 const BookTitle = styled.h3`
@@ -140,162 +84,122 @@ const BookDescription = styled.p`
   font-size: 0.9rem;
 `
 
-// Dummy book data
-const books = [
-  {
-    id: 1,
-    title: 'Introduction to Robotics for Kids',
-    author: 'Emily Chen',
-    description: 'Bu rangli dunyo va robotlar haqida qiziqarli ma`lumotlar.',
-    cover: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a',
-    category: 'free',
-    price: 'Free'
-  },
-  {
-    id: 2,
-    title: 'Coding Adventures',
-    author: 'Mark Johnson',
-    description: 'Dasturlashni o`rganish uchun qiziqarli va interaktiv darslar.',
-    cover: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c',
-    category: 'paid',
-    price: '$12.99'
-  },
-  {
-    id: 3,
-    title: 'AI for Beginners',
-    author: 'Sarah Williams',
-    description: 'Dunyodagi eng yangi texnologiyalarni o`rganish uchun asosiy qo`llanma.',
-    cover: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485',
-    category: 'paid',
-    price: '$14.99',
-    discounted: true,
-    discountPrice: '$8.99'
-  },
-  {
-    id: 4,
-    title: 'Physics Experiments at Home',
-    author: 'Dr. Alex Cooper',
-    description: 'Oson va qiziqarli fizik tajribalar bilan o`z bilimlaringizni kengaytiring.',
-    cover: 'https://images.unsplash.com/photo-1576086213369-97a306d36557',
-    category: 'free',
-    price: 'Free'
-  },
-  {
-    id: 5,
-    title: 'Robotics Projects: Level 1',
-    author: 'James Miller',
-    description: 'Qadamba qadam o`rganish uchun qiziqarli robototexnika loyihalari.',
-    cover: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e',
-    category: 'paid',
-    price: '$19.99',
-    discounted: true,
-    discountPrice: '$9.99'
-  },
-  {
-    id: 6,
-    title: 'The Innovation Mindset',
-    author: 'Dr. Lisa Brown',
-    description: 'Qanday qilib innovatsion fikrlashni rivojlantirish mumkinligi haqida.',
-    cover: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8',
-    category: 'free',
-    price: 'Free'
+const BookMeta = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  color: ${({ theme }) => theme.colors.neutral[500]};
+  font-size: 0.9rem;
+  
+  svg {
+    margin-right: 4px;
   }
-]
+`
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+`
 
 const Library = () => {
   const { theme } = useTheme()
-  const [activeCategory, setActiveCategory] = useState('All')
+  const [books, setBooks] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   
-  const categories = ['All', 'Free', 'Paid', 'Discounted']
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        setLoading(true)
+        const response = await bookService.getBooks()
+        // Check if response.data is an array
+        if (Array.isArray(response.data)) {
+          setBooks(response.data)
+        } else if (response.data && Array.isArray(response.data.results)) {
+          // Handle paginated response
+          setBooks(response.data.results)
+        } else {
+          // Handle empty or invalid response
+          setBooks([])
+        }
+        setError(null)
+      } catch (err) {
+        setError('Kitoblarni yuklashda xatolik yuz berdi')
+        console.error('Error fetching books:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    fetchBooks()
+  }, [])
   
-  const filteredBooks = activeCategory === 'All' 
-    ? books 
-    : books.filter(book => 
-        activeCategory === 'Free' 
-          ? book.category === 'free' 
-          : activeCategory === 'Paid' 
-          ? book.category === 'paid' && !book.discounted
-          : book.discounted
-      )
+  const handlePurchase = async (bookId) => {
+    try {
+      await bookService.purchaseBook(bookId)
+      // Handle successful purchase
+    } catch (err) {
+      console.error('Error purchasing book:', err)
+    }
+  }
+  
+  if (loading) {
+    return <div>Yuklanmoqda...</div>
+  }
+  
+  if (error) {
+    return <div>{error}</div>
+  }
+  
+  if (!books || books.length === 0) {
+    return <div>Kitoblar topilmadi</div>
+  }
   
   return (
     <LibraryContainer>
-      <PageTitle theme={theme}>Aqlli <span>Kutubxona</span></PageTitle>
-      
-      <CategoriesContainer>
-        {categories.map(category => (
-          <CategoryButton 
-            key={category}
-            variant={activeCategory === category ? 'primary' : 'outline'}
-            onClick={() => setActiveCategory(category)}
-            isActive={activeCategory === category}
-            theme={theme}
-          >
-            {category}
-          </CategoryButton>
-        ))}
-      </CategoriesContainer>
+      <PageTitle theme={theme}>O`qish uchun <span>Kitoblar</span></PageTitle>
       
       <BooksGrid>
-        {filteredBooks.map(book => (
-          <motion.div 
-            key={book.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            whileHover={{ y: -10 }}
-          >
-            <BookCard as={Link} to={`/library/${book.id}`} blurEffect>
-              <BookCover 
-                cover={book.cover} 
-                isPaid={book.category === 'paid' && !book.discounted}
-                theme={theme}
-              >
-                <BookPriceTag 
-                  isPaid={book.category === 'paid'} 
-                  isDiscounted={book.discounted}
-                  theme={theme}
-                >
-                  {book.category === 'free' ? (
-                    <>
-                      <FaBook /> Free
-                    </>
-                  ) : book.discounted ? (
-                    <>
-                      <FaTags /> {book.discountPrice}
-                    </>
-                  ) : (
-                    <>
-                      <FaLock /> {book.price}
-                    </>
-                  )}
-                </BookPriceTag>
-              </BookCover>
+        {books.map(book => (
+          <BookCard key={book.id} as={motion.div} whileHover={{ y: -5 }}>
+            <BookCover $cover={book.cover_image}>
+              <BookCategory $category={book.category}>
+                {book.category}
+              </BookCategory>
+            </BookCover>
+            
+            <BookInfo>
+              <BookTitle>{book.title}</BookTitle>
+              <BookAuthor>{book.author}</BookAuthor>
+              <BookDescription>{book.description}</BookDescription>
               
-              <BookInfo>
-                <BookTitle>{book.title}</BookTitle>
-                <BookAuthor theme={theme}>by {book.author}</BookAuthor>
-                <BookDescription>{book.description}</BookDescription>
-                
-                <Button 
-                  variant={book.category === 'free' ? 'primary' : 'gradient'} 
-                  icon={book.category === 'free' ? <FaDownload /> : <FaBook />}
-                  glowEffect
-                >
-                  {book.category === 'free' ? 'Download' : 'Read Preview'}
+              <BookMeta>
+                <div>
+                  <FaBook />
+                  {book.pages} sahifa
+                </div>
+                <div>
+                  <FaDownload />
+                  {book.downloads} yuklama
+                </div>
+              </BookMeta>
+              
+              <ButtonGroup>
+                <Button as={Link} to={`/app/library/${book.id}`} variant="primary">
+                  Batafsil
                 </Button>
-              </BookInfo>
-            </BookCard>
-          </motion.div>
+                <Button variant="secondary" onClick={() => handlePurchase(book.id)}>
+                  <FaShoppingCart />
+                  Sotib olish
+                </Button>
+              </ButtonGroup>
+            </BookInfo>
+          </BookCard>
         ))}
       </BooksGrid>
-      
-      {filteredBooks.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '40px 0' }}>
-          <h3>No books found in this category</h3>
-          <p>Please check back later or select another category.</p>
-        </div>
-      )}
     </LibraryContainer>
   )
 }

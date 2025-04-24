@@ -11,14 +11,13 @@ class Book(models.Model):
     title = models.CharField(_('title'), max_length=255)
     author = models.CharField(_('author'), max_length=255)
     description = models.TextField(_('description'))
-    category = models.CharField(
-        _('category'),
-        max_length=20,
-        choices=[
-            ('programming', 'Programming'),
-            ('ai', 'AI'),
-            ('robotics', 'Robotics')
-        ]
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='books',
+        verbose_name=_('category')
     )
     file = models.FileField(_('file'), upload_to='books/')
     preview_file = models.FileField(_('preview file'), upload_to='books/previews/', null=True, blank=True)

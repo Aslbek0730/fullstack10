@@ -28,8 +28,13 @@ from datetime import timedelta
 from django.utils import timezone
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework_simplejwt.views import TokenRefreshView
+import os
 
 # Create your views here.
+
+REDIS_URL = os.getenv('REDIS_URL')
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
 
 class DashboardOverviewView(APIView):
     """Dashboard umumiy ma'lumotlari"""
@@ -289,34 +294,27 @@ class UserRegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserRegisterSerializer
     permission_classes = [permissions.AllowAny]
-    
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        
-        # Create verification token
-        token = uuid.uuid4().hex
-        expires_at = timezone.now() + timedelta(hours=24)
-        EmailVerificationToken.objects.create(
-            user=user,
-            token=token,
-            expires_at=expires_at
-        )
-        
-        # Send verification email
-        verification_url = f"{settings.FRONTEND_URL}/verify-email?token={token}"
-        send_mail(
-            'Verify your email',
-            f'Click the link to verify your email: {verification_url}',
-            settings.DEFAULT_FROM_EMAIL,
-            [user.email],
-            fail_silently=False,
-        )
-        
-        return Response({
-            'message': 'Registration successful. Please check your email for verification.'
-        }, status=status.HTTP_201_CREATED)
+        if serializer.is_valid():
+            # Create user
+            user = serializer.save()
+            
+            # Set user as active by default
+            user.is_active = True
+            user.save()
+            
+            # Create JWT tokens
+            refresh = RefreshToken.for_user(user)
+            
+            return Response({
+                'message': 'Ro\'yxatdan o\'tish muvaffaqiyatli!',
+                'user': UserSerializer(user).data,
+                'access': str(refresh.access_token),
+                'refresh': str(refresh)
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class EmailVerificationView(generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
@@ -348,32 +346,31 @@ class EmailVerificationView(generics.GenericAPIView):
 class UserLoginView(generics.GenericAPIView):
     serializer_class = UserLoginSerializer
     permission_classes = [permissions.AllowAny]
-    
+
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        
-        user = get_object_or_404(User, email=serializer.validated_data['email'])
-        
-        if not user.check_password(serializer.validated_data['password']):
+        if serializer.is_valid():
+            user = authenticate(
+                email=serializer.validated_data['email'],
+                password=serializer.validated_data['password']
+            )
+            
+            if user:
+                # Create JWT tokens
+                refresh = RefreshToken.for_user(user)
+                
+                return Response({
+                    'user': UserSerializer(user).data,
+                    'access': str(refresh.access_token),
+                    'refresh': str(refresh)
+                })
+            
             return Response(
-                {'detail': 'Invalid credentials'},
+                {'detail': 'Email yoki parol noto\'g\'ri'},
                 status=status.HTTP_401_UNAUTHORIZED
             )
         
-        if not user.is_verified:
-            return Response(
-                {'detail': 'Please verify your email first'},
-                status=status.HTTP_401_UNAUTHORIZED
-            )
-        
-        refresh = RefreshToken.for_user(user)
-        
-        return Response({
-            'access': str(refresh.access_token),
-            'refresh': str(refresh),
-            'user': UserSerializer(user).data
-        })
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = UserProfileUpdateSerializer

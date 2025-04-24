@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useTheme } from '../contexts/ThemeContext'
 import { motion } from 'framer-motion'
 import Card from '../components/ui/Card'
 import Button from '../components/ui/Button'
 import { Link } from 'react-router-dom'
-import { FaClipboardCheck, FaClock, FaBook } from 'react-icons/fa'
+import { FaClipboardCheck, FaClock, FaBook, FaQuestionCircle, FaChartLine, FaUsers, FaChartBar } from 'react-icons/fa'
+import { testService } from '../services/api'
 
 const TestsContainer = styled.div`
   padding: 24px 0;
@@ -174,159 +175,144 @@ const TestResults = styled.div`
   }
 `
 
-// Dummy test data
-const tests = [
-  {
-    id: 1,
-    title: 'Robotics Basics',
-    description: 'Test sizning robototexnika asoslari bo`yicha bilimlaringizni baholaydi.',
-    category: 'Robotics',
-    questions: 10,
-    timeLimit: '15 min',
-    completed: true,
-    correct: 8,
-    incorrect: 2,
-    score: 80
-  },
-  {
-    id: 2,
-    title: 'Coding Fundamentals',
-    description: 'Tushunchalar va kod yozish asoslari bo`yicha bilimlaringizni baholaydi.',
-    category: 'Programming',
-    questions: 15,
-    timeLimit: '20 min',
-    completed: false
-  },
-  {
-    id: 3,
-    title: 'AI Concepts',
-    description: 'Test sizning sun`iy intellekt va mashinani o`rganish bo`yicha bilimlaringizni baholaydi.',
-    category: 'AI',
-    questions: 12,
-    timeLimit: '18 min',
-    completed: false
-  },
-  {
-    id: 4,
-    title: 'Physics Laws',
-    description: 'Sizning fizika qonunlari va tushunchalari bo`yicha bilimlaringizni baholaydi.',
-    category: 'Physics',
-    questions: 10,
-    timeLimit: '15 min',
-    completed: true,
-    correct: 9,
-    incorrect: 1,
-    score: 90
-  },
-  {
-    id: 5,
-    title: 'Robot Movement',
-    description: 'Test sizning robot harakatlari va sensorlar bo`yicha bilimlaringizni baholaydi.',
-    category: 'Robotics',
-    questions: 8,
-    timeLimit: '12 min',
-    completed: false
-  },
-  {
-    id: 6,
-    title: 'JavaScript Basics',
-    description: 'JavaScript dasturlash tili bo`yicha bilimlaringizni baholaydi.',
-    category: 'Programming',
-    questions: 20,
-    timeLimit: '25 min',
-    completed: false
+const FilterContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+`
+
+const FilterButton = styled(Button)`
+  ${({ isActive }) => 
+    isActive && `
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, ${({ theme }) => theme.colors.primary[400]}, ${({ theme }) => theme.colors.secondary[400]});
+      }
+    `
   }
-]
+`
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+`
 
 const Tests = () => {
   const { theme } = useTheme()
-  const [activeCategory, setActiveCategory] = useState('All')
+  const [tests, setTests] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [filter, setFilter] = useState('all')
   
-  const categories = ['All', 'Robotics', 'Programming', 'AI', 'Physics']
+  useEffect(() => {
+    const fetchTests = async () => {
+      try {
+        setLoading(true)
+        const response = await testService.getTests()
+        // Check if response.data is an array
+        if (Array.isArray(response.data)) {
+          setTests(response.data)
+        } else if (response.data && Array.isArray(response.data.results)) {
+          // Handle paginated response
+          setTests(response.data.results)
+        } else {
+          // Handle empty or invalid response
+          setTests([])
+        }
+        setError(null)
+      } catch (err) {
+        setError('Testlarni yuklashda xatolik yuz berdi')
+        console.error('Error fetching tests:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    fetchTests()
+  }, [])
   
-  const filteredTests = activeCategory === 'All' 
-    ? tests 
-    : tests.filter(test => test.category === activeCategory)
+  const filteredTests = tests.filter(test => {
+    if (filter === 'all') return true
+    if (filter === 'completed') return test.is_completed
+    if (filter === 'pending') return !test.is_completed
+    return true
+  })
+  
+  if (loading) {
+    return <div>Yuklanmoqda...</div>
+  }
+  
+  if (error) {
+    return <div>{error}</div>
+  }
+  
+  if (!filteredTests || filteredTests.length === 0) {
+    return <div>Testlar topilmadi</div>
+  }
   
   return (
     <TestsContainer>
-      <PageTitle theme={theme}>Bilimdon <span>Testlar</span></PageTitle>
+      <PageTitle theme={theme}>O`qish uchun <span>Testlar</span></PageTitle>
       
-      <CategoriesContainer>
-        {categories.map(category => (
-          <CategoryButton 
-            key={category}
-            variant={activeCategory === category ? 'primary' : 'outline'}
-            onClick={() => setActiveCategory(category)}
-            isActive={activeCategory === category}
-            theme={theme}
-          >
-            {category}
-          </CategoryButton>
-        ))}
-      </CategoriesContainer>
+      <FilterContainer>
+        <FilterButton 
+          isActive={filter === 'all'} 
+          onClick={() => setFilter('all')}
+        >
+          Barchasi
+        </FilterButton>
+        <FilterButton 
+          isActive={filter === 'completed'} 
+          onClick={() => setFilter('completed')}
+        >
+          Yechilgan
+        </FilterButton>
+        <FilterButton 
+          isActive={filter === 'pending'} 
+          onClick={() => setFilter('pending')}
+        >
+          Yechilmagan
+        </FilterButton>
+      </FilterContainer>
       
       <TestsGrid>
         {filteredTests.map(test => (
-          <motion.div 
-            key={test.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <TestCard 
-              as={test.completed ? Link : Link} 
-              to={test.completed ? `/tests/${test.id}/results` : `/tests/${test.id}`}
-              completed={test.completed}
-              theme={theme}
-              blurEffect
-            >
-              <TestIcon category={test.category} theme={theme}>
-                <FaClipboardCheck />
-              </TestIcon>
+          <TestCard key={test.id} as={motion.div} whileHover={{ y: -5 }}>
+            <TestInfo>
+              <TestTitle>{test.title}</TestTitle>
+              <TestDescription>{test.description}</TestDescription>
               
-              <TestInfo>
-                <TestTitle>{test.title}</TestTitle>
-                
-                <TestMeta theme={theme}>
-                  <div>
-                    <FaClipboardCheck />
-                    {test.questions} questions
-                  </div>
-                  <div>
-                    <FaClock />
-                    {test.timeLimit}
-                  </div>
-                </TestMeta>
-                
-                <TestDescription>{test.description}</TestDescription>
-                
-                {test.completed && (
-                  <TestResults theme={theme}>
-                    <strong>Your Results:</strong>
-                    <div>
-                      <span className="correct">Correct: {test.correct}</span>
-                      <span className="incorrect">Incorrect: {test.incorrect}</span>
-                      <span className="score">Score: {test.score}%</span>
-                    </div>
-                  </TestResults>
-                )}
-                
-                <Button variant={test.completed ? 'secondary' : 'gradient'} glowEffect>
-                  {test.completed ? 'View Results' : 'Start Test'}
+              <TestMeta>
+                <div>
+                  <FaClock />
+                  {test.duration} daqiqa
+                </div>
+                <div>
+                  <FaUsers />
+                  {test.participants} ishtirokchi
+                </div>
+                <div>
+                  <FaChartBar />
+                  {test.passing_score}% o`tish
+                </div>
+              </TestMeta>
+              
+              <ButtonGroup>
+                <Button as={Link} to={`/app/tests/${test.id}`} variant="primary">
+                  {test.is_completed ? 'Natijalarni ko`rish' : 'Testni boshlash'}
                 </Button>
-              </TestInfo>
-            </TestCard>
-          </motion.div>
+              </ButtonGroup>
+            </TestInfo>
+          </TestCard>
         ))}
       </TestsGrid>
-      
-      {filteredTests.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '40px 0' }}>
-          <h3>No tests found in this category</h3>
-          <p>Please check back later or select another category.</p>
-        </div>
-      )}
     </TestsContainer>
   )
 }

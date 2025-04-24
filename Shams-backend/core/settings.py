@@ -73,6 +73,9 @@ INSTALLED_APPS = [
     'apps.notifications',
 ]
 
+# Site ID
+SITE_ID = 1
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -220,7 +223,9 @@ SIMPLE_JWT = {
 }
 
 # CORS settings
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # Frontend URL
+]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -278,9 +283,6 @@ CLICK_MERCHANT_ID = os.getenv('CLICK_MERCHANT_ID')
 CLICK_MERCHANT_KEY = os.getenv('CLICK_MERCHANT_KEY')
 UZUM_MERCHANT_ID = os.getenv('UZUM_MERCHANT_ID')
 UZUM_MERCHANT_KEY = os.getenv('UZUM_MERCHANT_KEY')
-
-# Site ID
-SITE_ID = 1
 
 # Security settings
 SECURE_SSL_REDIRECT = not DEBUG
