@@ -17,11 +17,11 @@ from apps.accounts.models import UserActivity
 class BookListView(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     parser_classes = [MultiPartParser, FormParser]
 
     def get_queryset(self):
-        queryset = Book.objects.all()
+        queryset = Book.objects.filter(is_active=True)
         category = self.request.query_params.get('category', None)
         status = self.request.query_params.get('status', None)
         search = self.request.query_params.get('search', None)
@@ -49,8 +49,11 @@ class BookListView(generics.ListCreateAPIView):
 class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookDetailSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     parser_classes = [MultiPartParser, FormParser]
+
+    def get_queryset(self):
+        return Book.objects.filter(is_active=True)
 
     def get_serializer_class(self):
         if self.request.method in ['PUT', 'PATCH']:
@@ -60,7 +63,7 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     def get_permissions(self):
         if self.request.method in ['PUT', 'PATCH', 'DELETE']:
             return [permissions.IsAdminUser()]
-        return [permissions.IsAuthenticated()]
+        return [permissions.AllowAny()]
 
 class BookPurchaseView(generics.CreateAPIView):
     serializer_class = BookPurchaseCreateSerializer
